@@ -1,5 +1,5 @@
 import sys
-from search_algorithms import Node, StackFrontier, QueueFrontier, GreedyBestFirstSearchFrontier, AStarFrontier
+from search_algorithms import Node, StackFrontier, QueueFrontier, GreedyBestFirstSearchFrontier
 
 
 class Maze():
@@ -87,7 +87,7 @@ class Maze():
 
         # Initialize frontier to just the starting position
         start = Node(state=self.start, parent=None, action=None)
-        frontier = GreedyBestFirstSearchFrontier()
+        frontier = GreedyBestFirstSearchFrontier(self.goal)
         frontier.add(start)
 
         # Initialize an empty explored set

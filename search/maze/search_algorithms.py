@@ -55,46 +55,24 @@ class GreedyBestFirstSearchFrontier(StackFrontier):
     def __init__(self, goal):
         super().__init__()
         self.goal = goal
+        self.manhattan_distance = []
 
     def add(self, node):
-        # Calculate the distance between the current node and the goal
         # Manhattan distance: the sum of the absolute differences of their Cartesian coordinates
         distance = abs(node.state[0] - self.goal[0]) + abs(node.state[1] - self.goal[1])
         # Add the node and its distance to the frontier
-        self.frontier.append((node, distance))
+        self.manhattan_distance.append((node, distance))
+        # self.frontier.append(node)
 
     def remove(self):
         if self.empty():
             raise Exception("empty frontier")
         else:
             # Sort the frontier by the distance between the node and the goal
-            self.frontier.sort(key=lambda x: x[1])
+            self.manhattan_distance.sort(key=lambda x: x[1])
             # Save the node with the smallest distance
-            node = self.frontier[0][0]
+            node = self.manhattan_distance[0][0]
             # Save all the items on the list besides the first one (i.e. removing the first node)
             self.frontier = self.frontier[1:]
             return node
         
-
-# class AStarFrontier(StackFrontier):
-#     def __init__(self, goal):
-#         super().__init__()
-#         self.goal = goal
-
-#     def add(self, node):
-#         # Calculate the distance between the current node and the goal
-#         distance = abs(node.state[0] - self.goal[0]) + abs(node.state[1] - self.goal[1])
-#         # Add the node and its distance to the frontier
-#         self.frontier.append((node, distance))
-
-#     def remove(self):
-#         if self.empty():
-#             raise Exception("empty frontier")
-#         else:
-#             # Sort the frontier by the distance between the node and the goal
-#             self.frontier.sort(key=lambda x: x[1])
-#             # Save the node with the smallest distance
-#             node = self.frontier[0][0]
-#             # Save all the items on the list besides the first one (i.e. removing the first node)
-#             self.frontier = self.frontier[1:]
-#             return node
