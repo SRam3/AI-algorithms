@@ -1,56 +1,6 @@
 import sys
+from search_algorithms import Node, StackFrontier, QueueFrontier, GreedyBestFirstSearchFrontier, AStarFrontier
 
-class Node():
-    """
-    Data structure to keep track of:
-    A state
-    Its parent node, through which the current node was generated
-    The action that was applied to the state of the parent to get to the current node
-    The path cost from the initial state to this nod
-    """
-    def __init__(self, state, parent, action):
-        self.state = state
-        self.parent = parent
-        self.action = action
-
-# Frontier: Mechanism that “manages” the nodes
-class StackFrontier():
-    def __init__(self):
-        self.frontier = []
-
-    def add(self, node):
-        self.frontier.append(node)
-
-    def contains_state(self, state):
-        return any(node.state == state for node in self.frontier)
-
-    def empty(self):
-        return len(self.frontier) == 0
-
-    # Define the function that removes a node from the frontier and returns it.
-    def remove(self):
-        # Terminate the search if the frontier is empty, because this means that there is no solution.
-        if self.empty():
-            raise Exception("empty frontier")
-        else:
-            # Save the last item in the list (which is the newest node added)
-            node = self.frontier[-1]
-            # Save all the items on the list besides the last node (i.e. removing the last node)
-            self.frontier = self.frontier[:-1]
-            return node
-
-
-class QueueFrontier(StackFrontier):
-
-    def remove(self):
-        if self.empty():
-            raise Exception("empty frontier")
-        else:
-            # Save the oldest item on the list (which was the first one to be added)
-            node = self.frontier[0]
-            # Save all the items on the list besides the first one (i.e. removing the first node)
-            self.frontier = self.frontier[1:]
-            return node
 
 class Maze():
 
@@ -137,7 +87,7 @@ class Maze():
 
         # Initialize frontier to just the starting position
         start = Node(state=self.start, parent=None, action=None)
-        frontier = StackFrontier()
+        frontier = GreedyBestFirstSearchFrontier()
         frontier.add(start)
 
         # Initialize an empty explored set
