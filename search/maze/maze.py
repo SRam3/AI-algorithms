@@ -87,7 +87,8 @@ class Maze():
 
         # Initialize frontier to just the starting position
         start = Node(state=self.start, parent=None, action=None)
-        frontier = GreedyBestFirstSearchFrontier(self.goal)
+        # frontier = GreedyBestFirstSearchFrontier(self.goal)
+        frontier = QueueFrontier()
         frontier.add(start)
 
         # Initialize an empty explored set
@@ -189,4 +190,4 @@ m.solve()
 print("States Explored:", m.num_explored)
 print("Solution:")
 m.print()
-m.output_image("maze.png", show_explored=True)
+m.output_image("solution.png", show_explored=True)
