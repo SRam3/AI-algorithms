@@ -3,7 +3,7 @@ import random
 import re
 import sys
 
-DAMPING = 0.85
+DAMPING = 0.85 # The damping factor is the probability that the random surfer clicks on a link on the current page
 SAMPLES = 10000
 
 
@@ -12,6 +12,9 @@ def main():
         sys.exit("Usage: python pagerank.py corpus")
     corpus = crawl(sys.argv[1])
     print(corpus)
+
+    test = transition_model(corpus, "2.html", DAMPING)
+    print(test)
 
     # ranks = sample_pagerank(corpus, DAMPING, SAMPLES)
     # print(f"PageRank Results from Sampling (n = {SAMPLES})")
@@ -39,14 +42,10 @@ def crawl(directory):
             contents = f.read()
             links = re.findall(r"<a\s+(?:[^>]*?)href=\"([^\"]*)\"", contents)
             pages[filename] = set(links) - {filename}
-            #pages[filename] = set(links)
 
     # Only include links to other pages in the corpus
     for filename in pages:
-        pages[filename] = set(
-            link for link in pages[filename]
-            if link in pages
-        )
+        pages[filename] = set(link for link in pages[filename] if link in pages)
 
     return pages
 
@@ -60,7 +59,28 @@ def transition_model(corpus, page, damping_factor):
     linked to by `page`. With probability `1 - damping_factor`, choose
     a link at random chosen from all pages in the corpus.
     """
-    raise NotImplementedError
+
+#CORRECT WRONG OUTPUT: {'1.html': 0.037500000000000006, '2.html': 0.8875, '3.html': 0.037500000000000006, '4.html': 0.037500000000000006}
+
+# Dictionary to store the probability distribution
+    probability_distribution = {}
+
+# If the page has no outgoing links, then the probability distribution should choose randomly among all pages with equal probability
+    if len(corpus[page]) == 0:
+        for page in corpus:
+            probability_distribution[page] = 1 / len(corpus)
+        return probability_distribution
+
+# If the page has outgoing links, then each link should have a probability of being chosen that is proportional to the number of links on that page
+    else:
+        # Assign the same base probability to each page in the corpus
+        for page in corpus:
+            probability_distribution[page] = (1 - damping_factor) / len(corpus)
+        # Adjust the probability of the links on the current page
+        for link in corpus[page]:
+            probability_distribution[link] += damping_factor / len(corpus[page])
+
+    return probability_distribution
 
 
 def sample_pagerank(corpus, damping_factor, n):
@@ -72,7 +92,6 @@ def sample_pagerank(corpus, damping_factor, n):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    raise NotImplementedError
 
 
 def iterate_pagerank(corpus, damping_factor):
